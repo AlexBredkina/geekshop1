@@ -1,5 +1,7 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from authapp.models import User
+from django.core.exceptions import ValidationError
+from django import forms
 
 
 class UserLoginForm(AuthenticationForm):
@@ -13,7 +15,6 @@ class UserLoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
-
 
 
 class UserRegisterForm(UserCreationForm):
@@ -33,4 +34,25 @@ class UserRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control py-4'
             field.help_text = ''
 
+    def clean_age(self):
+        age = self.cleaned_data['age']
+        if age < 18:
+            raise ValidationError('Вы должны быть совершеннолетним', code='invalid_age')
 
+        return age
+
+
+class UserProfileForm(UserChangeForm):
+    avatar = forms.ImageField(widget=forms.FileInput())
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'avatar', 'username', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+        self.fields['username'].widget.attrs['readonly'] = True
+        self.fields['email'].widget.attrs['readonly'] = True
+        self.fields['avatar'].widget.attrs['class'] = 'custom-file-input'
