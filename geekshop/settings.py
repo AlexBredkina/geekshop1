@@ -123,3 +123,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 AUTH_USER_MODEL = 'authapp.User'
+
+LOGIN_URL = '/auth/login'
