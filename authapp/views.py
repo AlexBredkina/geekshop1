@@ -4,6 +4,7 @@ from django.contrib import auth, messages
 from django.urls import reverse
 from basketapp.models import Basket
 
+
 # Create your views here.
 
 
@@ -49,8 +50,20 @@ def profile(request):
             return HttpResponseRedirect(reverse('auth:profile'))
     else:
         form = UserProfileForm(instance=request.user)
+
+    # total_quantity =0
+    # for basket in Basket.objects.filter(user = request.user):
+    #     total_quantity+=1
+    # total_sum = 0
+    # for basket in Basket.objects.filter(user=request.user):
+    #     total_sum+=basket.sum()
     context = {
         'title': 'Профиль', 'form': form,
         'baskets': Basket.objects.filter(user=request.user),
+        # 'total_quantity': total_quantity,
+        # 'total_sum': total_sum,
+        # 'total_quantity': sum(basket.quantity for basket in Basket.objects.filter(user = request.user)),
+        # 'total_sum': sum(basket.sum() for basket in Basket.objects.filter(user = request.user)),
+
     }
     return render(request, 'authapp/profile.html', context)
