@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from authapp.models import User
-from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, ProductAdminRegisterForm, ProductAdminChangeForm
+from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, ProductAdminRegisterForm, ProductAdminChangeForm,CategoryAdminRegisterForm,CategoryAdminChangeForm
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test
 from mainapp.models import ProductCategory, Product
@@ -141,3 +141,45 @@ def admin_products_remove(request, product_id):
 #     product.is_active = False
 #     product.save()
 #     return HttpResponseRedirect(reverse('admin_staff:admin_products', args=[product.category.pk]))
+def admin_categories(request):
+    context = {
+        'categories': ProductCategory.objects.all(),
+    }
+    return render(request, 'adminapp/admin-category-read.html', context)
+
+
+def admin_categories_create(request):
+    if request.method == 'POST':
+        form = CategoryAdminRegisterForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('adminapp:admin_categories'))
+    else:
+        form = CategoryAdminRegisterForm()
+    context = {'form': form}
+    return render(request, 'adminapp/admin-category-create.html', context)
+
+
+def admin_categories_remove(request, cat_id):
+    category = ProductCategory.objects.get(id=cat_id)
+    category.is_active = False
+    category.save()
+    return HttpResponseRedirect(reverse('admin_staff:admin_categories'))
+
+
+
+def admin_categories_update(request, cat_id):
+    category = ProductCategory.objects.get(id=cat_id)
+    if request.method == 'POST':
+        form = CategoryAdminChangeForm(data=request.POST, files=request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admin_staff:admin_categories'))
+    else:
+        form = CategoryAdminChangeForm(instance=category)
+
+    context = {
+        'form': form,
+        'category': category
+    }
+    return render(request, 'adminapp/admin-category-update-delete.html', context)
