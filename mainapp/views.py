@@ -20,19 +20,19 @@ def products(request, pk=None):
     return render(request, 'mainapp/products.html', context=context)
 
 
-def test_context(request):
-    context = {
-        'title': 'добро пожаловать!',
-        'username': 'Valeriy Pavlikov',
-        'products': [{'name': 'Черное худи', 'price': '2 9990 руб.'},
-                     {'name': 'Джинсы', 'price': '5 800 руб.'},
-
-                     ],
-        'promotion': True,
-        'promotion_products': [
-            {'name': 'Туфли Dr Martnes', 'price': '10 000 руб.'},
-        ],
-
-    }
-    products = context['products']
-    return render(request, 'mainapp/context.html', context)
+# def test_context(request):
+#     context = {
+#         'title': 'добро пожаловать!',
+#         'username': 'Valeriy Pavlikov',
+#         'products': [{'name': 'Черное худи', 'price': '2 9990 руб.'},
+#                      {'name': 'Джинсы', 'price': '5 800 руб.'},
+#
+#                      ],
+#         'promotion': True,
+#         'promotion_products': [
+#             {'name': 'Туфли Dr Martnes', 'price': '10 000 руб.'},
+#         ],
+#
+#     }
+#     products = context['products']
+#     return render(request, 'mainapp/context.html', context)
